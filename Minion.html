@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Музончик</title>
+  <style>
+    body { 
+      background-color: black; 
+      color: white; 
+      text-align: center; 
+      padding-top: 50px;
+      font-family: Arial, sans-serif;
+    }
+    
+    button { 
+      background-color: gray; 
+      color: white; 
+      padding: 10px; 
+      border: none; 
+      cursor: pointer; 
+      font-size: 18px; 
+      border-radius: 5px;
+    }
+
+    button:hover { 
+      background-color: darkgray; 
+    }
+
+    #stopImage {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Приятного прослушивания❤</h1>
+  <button id="stopButton">Остановить</button>
+  <img id="stopImage" src="https://freesoundtag.online/stop.png" alt="Остановлено">
+
+  <audio id="audioPlayer" preload="auto" loop></audio>
+
+  <script>
+    const audioElement = document.getElementById('audioPlayer');
+    const stopButton = document.getElementById('stopButton');
+    const stopImage = document.getElementById('stopImage');
+    
+    // Ссылка на музыку
+    const audioURL = "https://sndtag.ru/assets/songs/tvorog.mp3";
+
+    function playAudio() {
+      audioElement.src = audioURL;
+      audioElement.volume = 0.5; // Устанавливаем громкость 50%
+      audioElement.load();
+
+      // Попытка запустить аудио
+      audioElement.play().catch(() => {
+        console.warn("Автоплей заблокирован, ждём взаимодействия...");
+        document.addEventListener("click", firstUserInteraction, { once: true });
+      });
+    }
+
+    function firstUserInteraction() {
+      audioElement.play().then(() => {
+        console.log("Музыка запущена после клика.");
+      }).catch(err => console.error("Ошибка воспроизведения:", err));
+    }
+
+    function fakeStop() {
+      stopImage.style.display = "block"; // Показываем картинку
+    }
+
+    // Запускаем музыку после загрузки страницы
+    document.addEventListener("DOMContentLoaded", playAudio);
+    stopButton.addEventListener('click', fakeStop);
+  </script>
+</body>
+</html>
